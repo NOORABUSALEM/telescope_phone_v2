@@ -1,0 +1,48 @@
+{
+	"Language": "اللغة",
+	"hello": "مرحبا",
+	"email": "البريد الإلكتروني",
+	"password": "كلمة السر",
+	"login": "تسجيل",
+	"Dark Theme": "الوضع الليلي",
+	"Log Out": "خروج",
+	"KPIs": "المؤشرات",
+	"Confirm Logout": "تأكيد تسجيل الخروج",
+	"Are you sure you want to log out?": "هل انت متأكد من انك تريد الخروج",
+	"Cancel": "الغاء",
+	"TeleScope": "تيليسكوب",
+	"Subscriptions": "الاشتركات",
+	"Daily": "يومي",
+	"Weekly": "أسبوعي",
+	"Monthly": "شهري",
+	"All": "الكل",
+	"No chart available": "لا يوجد مخطط متاح",
+	"Related KPIs" : "مؤشرات الأداء ذات صلة",
+	"Subs" :"الاشتراكات" ,
+	"Minutes" :  "عدد الدقائق",
+	"Calls" : "عدد المكالمات",
+	"Yesterday": "أمس",
+	"Last Week": "الأسبوع الماضي",
+	"Month Average": "المتوسط الشهري",
+	"KPI Settings": "إعدادات المؤشر",
+	"About KPI": "حول المؤشر",
+	"Disable Notifications": "تعطيل الإشعارات",
+	"Set Alarm": "إعداد منبه",
+	"No KPI data available.\n Add from KPI page": "          لا يوجد مؤشرات \n قم بالإضافة من صفحة المؤشرات",
+	"Search...": "بحث. . .",
+	"KPIs List": "قائمة المؤشرات",
+	"employee": "موظف",
+	"manager": "مدير",
+	"Tap here to add KPIs": "اضغط هنا لإضافة مؤشرات",
+	"Add KPIs from here": "اضف مؤشراتك من هنا",
+	"You Have Achieved": "لقد حققت",
+	"Of Your Target": "من هدفك"
+
+
+
+
+
+
+
+
+}

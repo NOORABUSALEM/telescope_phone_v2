@@ -1,0 +1,46 @@
+{
+  "Language": "Language",
+  "hello": "Hello",
+  "email": "Email",
+  "password": "Password",
+  "login": "Log In",
+  "Dark Theme": "Dark Theme",
+  "KPIs": "KPIs",
+  "Confirm Logout": "Confirm Logout",
+  "Are you sure you want to log out?": "Are you sure you want to log out?",
+  "Cancel": "Cancel",
+  "Log Out" : "Log Out",
+  "TeleScope": "TeleScope",
+  "Subscriptions": "Subscriptions",
+  "Daily": "Daily",
+  "Weekly": "Weekly",
+  "All": "All",
+  "Related KPIs" : "Related KPIs",
+  "Subs": "Subs",
+  "Minutes" : "Minutes" ,
+  "Calls" : "Calls",
+  "No chart available" : "No chart available" ,
+  "Monthly": "Monthly",
+  "Yesterday": "Yesterday",
+  "Last Week": "Last Week",
+  "Month Average": "Month Average",
+  "KPI Settings": "KPI Settings",
+  "About KPI": "About KPI",
+  "Disable Notifications": "Disable Notifications",
+  "Set Alarm": "Set Alarm",
+  "No KPI data available.\n Add from KPI page": "No KPI data available.\n Add from KPI page",
+  "Search...": "Search...",
+  "KPIs List": "KPIs List",
+  "employee": "employee",
+  "manager": "manager",
+  "Tap here to add KPIs": "Tap here to add KPIs",
+  "Add KPIs from here": "Add KPIs from here",
+  "You Have Achieved": "You Have Achieved",
+  "Of Your Target": "Of Your Target"
+
+
+
+
+
+}
+
