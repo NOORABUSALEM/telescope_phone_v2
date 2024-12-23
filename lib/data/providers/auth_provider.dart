@@ -7,8 +7,8 @@ class AuthProvider {
 
   AuthProvider(this._dio) {
     _dio.options.baseUrl = ApiConstants.baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 5);
-    _dio.options.receiveTimeout = const Duration(seconds: 5);
+   // _dio.options.connectTimeout = const Duration(seconds: 15);
+   // _dio.options.receiveTimeout = const Duration(seconds: 15);
   }
 
   // Login API call

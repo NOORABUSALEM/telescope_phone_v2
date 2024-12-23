@@ -5,8 +5,9 @@ class ApiConstants {
   static const String kpis = '$baseUrl/kpis';
 
   static const String loginEndpoint = '$users/login';
+  static const String getAllkpisEndpoint = '$kpis/mobileApp/getAllaccessibleKpi';
 
-  // static const kpiInfo = "$baseUrl/kpi/info";
+// static const kpiInfo = "$baseUrl/kpi/info";
   // static const kpiDailyData = "$baseUrl/kpi/data/daily/LatestDailyRecord";
   // static const latestSevenRecords =
   //     "$baseUrl/kpi/data/daily/LatestSevenRecords";

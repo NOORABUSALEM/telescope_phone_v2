@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telescope_phone_v2/core/services/user_service.dart';
 
 import '../../../core/services/auth_service.dart';
+import '../../../core/services/info_service.dart';
 import '../../models/user_model.dart';
 import '../../repos/auth_repository.dart';
 import 'login_state.dart';
@@ -12,6 +13,7 @@ class LoginCubit extends Cubit<LoginState> {
   final AuthService _authService =
       AuthService(); // AuthService for saving token
   final UserService _userService = UserService();
+  final InfoService _infoService = InfoService();
 
   LoginCubit(this._authRepository) : super(LoginInitial());
 
@@ -23,11 +25,13 @@ class LoginCubit extends Cubit<LoginState> {
     if (result != null) {
       User user = result['user'];
       String token = result['token'];
+      //String date = '';
 
       await _authService.saveToken(token);
       await _userService.saveUserName(user.name.toString());
       await _userService.saveUserEmail(user.email.toString());
       await _userService.saveRole(user.role.toString());
+      //await _infoService.saveDate(date);
 
       print('Login success: User name: ${user.name}, Token: $token');
 

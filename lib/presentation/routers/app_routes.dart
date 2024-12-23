@@ -18,7 +18,7 @@ class AppRoutes {
     return {
       splash: (context) => const SplashScreen(),
       login: (context) => LoginScreen(),
-      home: (context) => const HomeScreen(),
+      home: (context) =>  HomeScreen(),
       // dailyKpi: (context) => const DailyDetails(),
       // monthlyKpi: (context) => const MonthlyKpisView(),
       // aboutKpi: (context) => AboutKpi(),
