@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:telescope_phone_v2/data/models/kpiInfo.dart';
+import 'package:telescope_phone_v2/presentation/components/presenteg.dart';
+
 import '../../core/styles/color_constants.dart';
-import '../../data/models/kpi_model.dart';
 import '../routers/app_routes.dart';
 
 class KpiCard extends StatelessWidget {
-  final KpiInfo kpiData;
+  final KpiInfo kpiItem;
 
-  KpiCard({super.key, required this.kpiData});
+  KpiCard({super.key, required this.kpiItem});
 
   @override
   Widget build(BuildContext context) {
-    //List<FlSpot> spots = _generateChartData(kpiData);
+    List<FlSpot> spots = _generateChartData(kpiItem.kpiData!.dataList[0]);
 
     return GestureDetector(
       onTap: () {
-        //Navigator.pushNamed(context, AppRoutes., arguments: kpiData);
+        Navigator.pushNamed(context, AppRoutes.kpiStatistics, arguments: kpiItem);
       },
       child: Container(
         decoration: const BoxDecoration(
@@ -35,7 +36,7 @@ class KpiCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "data 1",
+                      kpiItem.getLocalizedName(context),
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const Icon(
@@ -49,17 +50,14 @@ class KpiCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      //kpiData.formatNumberWithCommas(kpiData.value.toInt()),
-                      "value",
+                      kpiItem.kpiData!.value.first.data.toString(),
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    // PercentageWidget(
-                    //   currentValue: kpiData.difference?.toDouble() ?? 0,
-                    //   devidedValue: kpiData.value,
-                    //)
+                    PercentageWidget(percentage: kpiItem.kpiData!.compilationData[0],
+                    )
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -76,22 +74,22 @@ class KpiCard extends StatelessWidget {
                             ? AppColors.secondary
                             : AppColors.primary,
                         dotData: const FlDotData(show: false),
-                       // spots: spots,
+                        spots: spots,
                         belowBarData: BarAreaData(
                           show: true,
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: Theme.of(context).brightness ==
-                                Brightness.dark
+                                    Brightness.dark
                                 ? [
-                              AppColors.secondary.withOpacity(0.3),
-                              AppColors.darkCardColor.withOpacity(0.3)
-                            ]
+                                    AppColors.secondary.withOpacity(0.3),
+                                    AppColors.darkCardColor.withOpacity(0.3)
+                                  ]
                                 : [
-                              AppColors.primary.withOpacity(0.3),
-                              AppColors.lightCardColor.withOpacity(0.3)
-                            ],
+                                    AppColors.primary.withOpacity(0.3),
+                                    AppColors.lightCardColor.withOpacity(0.3)
+                                  ],
                           ),
                         ),
                       ),
@@ -110,20 +108,18 @@ class KpiCard extends StatelessWidget {
   }
 }
 
-// Helper method to generate FlSpot values from dailyData
-//List<FlSpot> _generateChartData(KpiDailyData dailyData) {
+
+List<FlSpot> _generateChartData(List<double> values) {
   // Assuming last7Days contains a list of 7 double values representing the KPI for each day
-  //List<double> values = dailyData.last7Days;
+
 
   // Ensure there are 7 values in the list, or handle cases where data is missing
-  //if (values.length != 7) {
-   // throw Exception('The last7Days list must contain exactly 7 values.');
-  //}
+
 
   // Create a list of FlSpot for the chart using the last 7 days of data
-  //return List.generate(values.length, (index) {
+  return List.generate(values.length, (index) {
     // The x-axis represents the day (index 0 = 7 days ago, index 6 = today)
-//     // The y-axis is the corresponding KPI value
-//     return FlSpot(index.toDouble(), values[index]);
-//   });
-// }
+    // The y-axis is the corresponding KPI value
+    return FlSpot(index.toDouble(), values[index]);
+  });
+}

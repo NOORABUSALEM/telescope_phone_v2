@@ -1,45 +1,69 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../core/constants/constants.dart';
-import '../../core/services/auth_service.dart';
 import '../models/kpiInfo.dart';
-import '../models/kpi_model.dart';
 
 class KpiInfoProvider {
-  late Dio dio;
-  late AuthService authService;
+  final Dio client;
 
-  KpiInfoProvider() {
-    dio = Dio(BaseOptions(baseUrl: ApiConstants.kpis));
-    authService = AuthService();
-  }
+  KpiInfoProvider(this.client);
 
-  Future<List<KpiInfo>> fetchKpisInfo() async {
+  Future<List<KpiInfo>> getKpiList() async {
     try {
-      // Get the token from AuthService
-      final token = await authService.getToken();
+      // Retrieve the token from shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('user_token');
 
       if (token == null) {
-        throw Exception('User token is missing. Please log in.');
+        print('Token is null. Please log in again.');
+        return [];
       }
 
-      // Add the token to the request header
-      dio.options.headers['Authorization'] = 'Bearer $token';
-      print('Token added to request header: $token');
+      // Set Authorization header
+      client.options.headers['Authorization'] = 'Bearer $token';
 
-      // Make the request
-      final response = await dio.get(ApiConstants.getAllkpisEndpoint);
+      // Optional: Custom status validation
+      client.options.validateStatus = (status) {
+        return status != null && status < 500; // Allow all 2xx and 4xx statuses
+      };
+
+      // Make the GET request
+      final response = await client.get(ApiConstants.getAllkpisEndpoint);
+
+      if (response.statusCode == 401) {
+        print('Unauthorized request: 401. Check your token.');
+        return [];
+      }
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        print('Fetched data: $data');
-        return data.map((json) => KpiInfo.fromJson(json)).toList();
+        // Check the structure of the response data
+        final responseData = response.data;
+
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('data') &&
+            responseData['data'] is List) {
+          List<KpiInfo> kpiInfoList = (responseData['data'] as List)
+              .map((json) => KpiInfo.fromJson(json))
+              .toList();
+          print('Fetched ${kpiInfoList.length} KPI(s) successfully.');
+          return kpiInfoList;
+        } else {
+          print('Unexpected data format: ${responseData.runtimeType}');
+          return [];
+        }
       } else {
         print('Failed to fetch KPIs. Status code: ${response.statusCode}');
-        throw Exception('Failed to fetch KPIs');
+        print('Response: ${response.data}');
       }
-    } catch (e) {
-      print('Error fetching KPIs: $e');
-      throw Exception('Error fetching KPIs: $e');
+    } on DioException catch (e) {
+      print('Dio error: ${e.message}');
+      print('Error response: ${e.response?.data}');
+    } catch (e, s) {
+      print('Unknown error: $e');
+      print(s);
     }
+
+    return [];
   }
 }

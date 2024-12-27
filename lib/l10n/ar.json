@@ -15,6 +15,8 @@
 	"Daily": "يومي",
 	"Weekly": "أسبوعي",
 	"Monthly": "شهري",
+	"Quarterly": "ربع سنوي",
+	"Yearly": "سنوي",
 	"All": "الكل",
 	"No chart available": "لا يوجد مخطط متاح",
 	"Related KPIs" : "مؤشرات الأداء ذات صلة",
@@ -36,13 +38,15 @@
 	"Tap here to add KPIs": "اضغط هنا لإضافة مؤشرات",
 	"Add KPIs from here": "اضف مؤشراتك من هنا",
 	"You Have Achieved": "لقد حققت",
-	"Of Your Target": "من هدفك"
-
-
-
-
-
-
+	"Of Your Target": "من هدفك",
+	"Data Source:": "مصدر البيانات:",
+	"Unknown": "غير معروف",
+	"How to Measure:":"كيفية القياس:",
+	"Error loading KPIs": "خطأ في تحميل مؤشرات الأداء الرئيسية",
+	"The Formula:": "الصيغة:",
+	"Last Updated:":"آخر تحديث:",
+	"No KPI data available.":"لا توجد بيانات مؤشرات متاحة.",
+	"Fetching last updated date...": "جاري جلب تاريخ آخر تحديث..."
 
 
 }

@@ -14,13 +14,15 @@
   "Subscriptions": "Subscriptions",
   "Daily": "Daily",
   "Weekly": "Weekly",
+  "Monthly": "Monthly",
+  "Quarterly":"Quarterly" ,
+  "Yearly": "Yearly",
   "All": "All",
   "Related KPIs" : "Related KPIs",
   "Subs": "Subs",
   "Minutes" : "Minutes" ,
   "Calls" : "Calls",
   "No chart available" : "No chart available" ,
-  "Monthly": "Monthly",
   "Yesterday": "Yesterday",
   "Last Week": "Last Week",
   "Month Average": "Month Average",
@@ -36,11 +38,14 @@
   "Tap here to add KPIs": "Tap here to add KPIs",
   "Add KPIs from here": "Add KPIs from here",
   "You Have Achieved": "You Have Achieved",
-  "Of Your Target": "Of Your Target"
-
-
-
-
-
+  "Of Your Target": "Of Your Target",
+  "Data Source:": "Data Source:",
+  "Unknown": "Unknown",
+  "How to Measure:": "How to Measure:",
+  "Error loading KPIs": "Error loading KPIs",
+  "The Formula:": "The Formula:",
+  "Last Updated:": "Last Updated:",
+  "No KPI data available.": "No KPI data available.",
+  "Fetching last updated date...": "Fetching last updated date..."
 }
 

@@ -6,6 +6,7 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:telescope_phone_v2/core/services/auth_service.dart';
 import 'package:telescope_phone_v2/data/providers/auth_provider.dart';
 import 'package:telescope_phone_v2/presentation/routers/app_routes.dart';
+import 'package:telescope_phone_v2/presentation/screens/home/kpi_tab.dart';
 
 import 'app_localizations.dart';
 import 'core/services/user_language_service.dart';
@@ -18,6 +19,7 @@ import 'data/repos/auth_repository.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserLanguageService.init();
+  await DailyKpisView.init(); // Initialize SharedPreferences here
 
   runApp(ShowCaseWidget(
     builder: (context) => MultiBlocProvider(

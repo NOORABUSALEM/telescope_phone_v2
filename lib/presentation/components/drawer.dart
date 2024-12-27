@@ -4,10 +4,13 @@ import 'package:gap/gap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:telescope_phone_v2/core/extensions/translation_extension/Translation_extension.dart';
+import 'package:telescope_phone_v2/core/services/user_service.dart';
+import 'package:telescope_phone_v2/data/cubits/kpiInfo_cubit/kpi_info_cubit.dart';
 import 'package:telescope_phone_v2/presentation/components/themeToggleButton.dart';
+import 'package:telescope_phone_v2/presentation/screens/all_KPIs/all_kpis.dart';
+
 import '../../core/services/info_service.dart';
 import '../../core/styles/color_constants.dart';
-import '../../data/cubits/kpi_cubit/kpi_cubit.dart';
 import '../../data/cubits/login_cubit/login_cubit.dart';
 import 'languageSelector.dart';
 
@@ -20,13 +23,13 @@ class _AppDrawerState extends State<AppDrawer> {
   String? userName;
   String? userEmail;
   String? userRole;
-  final InfoService infoService = InfoService();
+  final UserService userService = UserService();
   final GlobalKey _kpiKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    //_loadUserName();
+    _loadUserName();
     _checkShowCaseStatus2();
   }
 
@@ -42,27 +45,29 @@ class _AppDrawerState extends State<AppDrawer> {
     }
   }
 
-  // void _loadUserName() async {
-  //   final name = await infoService.getUserName();
-  //   final email = await infoService.getUserEmail();
-  //   final role = await infoService.getRole();
-  //   setState(() {
-  //     userName = name ?? 'Guest';
-  //     userEmail = email ?? 'Guest';
-  //     userRole = role ?? 'Guest';
-  //   });
-  // }
+  void _loadUserName() async {
+    final name = await userService.getUserName();
+    final email = await userService.getUserEmail();
+    final role = await userService.getRole();
+    setState(() {
+      userName = name ?? 'Guest';
+      userEmail = email ?? 'Guest';
+      userRole = role ?? 'Guest';
+    });
+  }
 
   Future<void> _navigateToAllKpis(BuildContext context) async {
-    //final result = await Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => const AllKpis(),
-    //   ),
-    // );
-    // if (result == true) {
-    //   context.read<KpiCubit>().fetchKpis();
-    // }
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+       // builder: (context) => const AllKpis(),
+        builder: (context) => const AllKpisSettingView(),
+      ),
+    );
+    if (result == true) {
+      //context.read<KpiDailyDataCubit>().fetchKpiDailyData();
+      context.read<KpiInfoCubit>().fetchKpiInfo();
+    }
   }
 
   @override

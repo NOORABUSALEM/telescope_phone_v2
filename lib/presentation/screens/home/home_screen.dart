@@ -1,38 +1,30 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:telescope_phone_v2/core/extensions/translation_extension/Translation_extension.dart';
-import 'package:telescope_phone_v2/presentation/screens/home/kpisTabView.dart';
-import '../../../data/cubits/kpi_cubit/kpi_cubit.dart';
-import '../../../data/cubits/kpi_cubit/kpi_state.dart';
+import '../../../core/services/info_service.dart';
+import '../../../data/cubits/kpiInfo_cubit/kpi_info_cubit.dart';
 import '../../../data/cubits/search_cubit/search_bar_cubit.dart';
-import '../../../data/providers/kpi_provider.dart';
 import '../../../data/providers/kpiinfo_providers.dart';
 import '../../../data/repos/kpiInfo_repository.dart';
-import '../../../data/repos/kpi_repository.dart';
 import '../../components/customSearchBar.dart';
 import '../../components/drawer.dart';
-
+import 'kpi_tab.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return  MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => SearchBarCubit()),
         BlocProvider(
-          create: (context) => SearchBarCubit(),
-        ),
-        BlocProvider(
-          create: (context) => KpiCubit(
-            KpiInfoRepository(
-              provider: KpiInfoProvider(),
-            ),
-          )..fetchKpis(),
+          create: (_) => KpiInfoCubit(
+            KpiInfoRepository(KpiInfoProvider(Dio())),
+          )..fetchKpiInfo(),
         ),
       ],
       child: HomeScreenView(),
@@ -50,13 +42,13 @@ class HomeScreenView extends StatefulWidget {
 class _HomeScreenViewState extends State<HomeScreenView> {
   final GlobalKey _drawerKey = GlobalKey();
   String? date;
-  //final InfoService infoService = InfoService();
+  final InfoService infoService = InfoService();
 
   @override
   void initState() {
     super.initState();
     _checkShowCaseStatus();
-    _loadUserName();
+    _loadDataService();
   }
 
   Future<void> _checkShowCaseStatus() async {
@@ -71,15 +63,19 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     }
   }
 
-  void _loadUserName() async {
-    //final dateTime = await infoService.getDate();
+  void _loadDataService() async {
+    final dateTimeString = await infoService.getDate();
 
     setState(() {
-      //date = dateTime ?? '00:00';
-      date = '00:00';
+      if (dateTimeString != null) {
+        // Parse the ISO 8601 string to DateTime
+        DateTime parsedDate = DateTime.parse(dateTimeString);
+
+        // Format as day, month, and year (dd/MM/yyyy)
+        date = "${parsedDate.day}/${parsedDate.month}/${parsedDate.year}";
+      }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -91,35 +87,35 @@ class _HomeScreenViewState extends State<HomeScreenView> {
             builder: (context, state) {
               return switch (state) {
                 SearchBarShow() => AppBar(
-                  title: CustomSearchBar(
-                    controller:
-                    context.watch<SearchBarCubit>().searchController,
-                  ),
-                ),
-                SearchBarHide() => AppBar(
-                  leading: Showcase(
-                    key: _drawerKey,
-                    description: (context).trans("Tap here to add KPIs"),
-                    child: InkWell(
-                        onTap: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        child: const Icon(Icons.menu)),
-                  ),
-                  centerTitle: true,
-                  title: Text(
-                    context.trans("TeleScope"),
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  actions: [
-                    IconButton(
-                      onPressed: () {
-                        context.read<SearchBarCubit>().show();
-                      },
-                      icon: const Icon(Icons.search_outlined),
+                    title: CustomSearchBar(
+                      controller:
+                          context.watch<SearchBarCubit>().searchController,
                     ),
-                  ],
-                ),
+                  ),
+                SearchBarHide() => AppBar(
+                    leading: Showcase(
+                      key: _drawerKey,
+                      description: (context).trans("Tap here to add KPIs"),
+                      child: InkWell(
+                          onTap: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          child: const Icon(Icons.menu)),
+                    ),
+                    centerTitle: true,
+                    title: Text(
+                      context.trans("TeleScope"),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          context.read<SearchBarCubit>().show();
+                        },
+                        icon: const Icon(Icons.search_outlined),
+                      ),
+                    ],
+                  ),
               };
             },
           ),
@@ -138,21 +134,23 @@ class _HomeScreenViewState extends State<HomeScreenView> {
             Expanded(
               child: TabBarView(
                 children: [
-                 KpisTabView(),
-                  KpisTabView()
+                  DailyKpis(),
+                  DailyKpis(),
                 ],
               ),
             ),
           ],
         ),
         extendBody: true,
-        bottomNavigationBar: BlocConsumer<KpiCubit, KpiState>(
+        bottomNavigationBar: BlocConsumer<KpiInfoCubit, KpiInfoState>(
           listener: (context, state) {
           },
           builder: (context, state) {
             return BottomAppBar(
-              child: Center(child: Text('Last Update was : $date')),
-              color: Color(0xFFB2DAFF).withOpacity(0.4),
+              color: const Color(0xFFB2DAFF).withOpacity(0.4),
+              child: Center(child: Text(date != null
+            ? "${(context).trans("Last Updated:")} $date" // Display formatted date
+                : (context).trans("Fetching last updated date..."))),
             );
           },
         ),
@@ -160,3 +158,4 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     );
   }
 }
+//${(context).trans("Last Update was :")}

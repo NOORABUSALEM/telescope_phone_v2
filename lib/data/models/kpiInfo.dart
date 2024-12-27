@@ -1,89 +1,156 @@
-class KpiInfo {
-  String? status;
-  List<Data>? data;
+import 'package:flutter/cupertino.dart';
 
-  KpiInfo({this.status, this.data});
+import 'kpiData_model.dart';
 
-  KpiInfo.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
-      });
+class KpiInfoListModel {
+  List<KpiInfo>? kpiInfo;
+
+  KpiInfoListModel({this.kpiInfo});
+
+  factory KpiInfoListModel.fromJson(Map<String, dynamic> json) {
+    // Safeguard for unexpected `data` format
+    if (json['data'] is! List) {
+      throw FormatException('Unexpected data format: Expected a list but got ${json['data'].runtimeType}');
     }
+
+    return KpiInfoListModel(
+      kpiInfo: (json['data'] as List<dynamic>)
+          .map((e) => KpiInfo.fromJson(e))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return {
+      'data': kpiInfo?.map((e) => e.toJson()).toList(),
+    };
   }
 }
-
-class Data {
+class KpiInfo {
   String? id;
-  String? nameEn;
   String? nameAr;
-  String? type;
-  String? unit;
-  String? periodicity;
-  bool? positiveDirection;
-  List<Null>? relatedKpis;
-  String? descriptionEn;
+  String? nameEn;
   String? descriptionAr;
-  String? formula;
+  String? descriptionEn;
+  String? type;
+  num? target;
+  String? auth;
+  bool? notification;
+  bool? positiveDirection; // Updated field name
+  String? kpiUnit;
+  String? source;
+  String? periodicity; // New field
+  List<RelatedKpi>? relatedKpis;
+  KpiData? kpiData;
 
-  Data(
-      {this.id,
-        this.nameEn,
-        this.nameAr,
-        this.type,
-        this.unit,
-        this.periodicity,
-        this.positiveDirection,
-        this.relatedKpis,
-        this.descriptionEn,
-        this.descriptionAr,
-        this.formula});
+  KpiInfo({
+    this.id,
+    this.nameAr,
+    this.nameEn,
+    this.descriptionAr,
+    this.descriptionEn,
+    this.type,
+    this.target,
+    this.auth,
+    this.notification,
+    this.positiveDirection,
+    this.kpiUnit,
+    this.source,
+    this.periodicity, // New field
+    this.relatedKpis,
+    this.kpiData,
+  });
 
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    nameEn = json['nameEn'];
-    nameAr = json['nameAr'];
-    type = json['type'];
-    unit = json['unit'];
-    periodicity = json['periodicity'];
-    positiveDirection = json['positiveDirection'];
-    if (json['relatedKpis'] != null) {
-      relatedKpis = <Null>[];
-      // json['relatedKpis'].forEach((v) {
-      //   relatedKpis!.add(new Null.fromJson(v));
-      // });
-    }
-    descriptionEn = json['descriptionEn'];
-    descriptionAr = json['descriptionAr'];
-    formula = json['formula'];
+  factory KpiInfo.fromJson(Map<String, dynamic> json) {
+    return KpiInfo(
+      id: json['id'] as String?,
+      nameAr: json['nameAr'] as String?,
+      nameEn: json['nameEn'] as String?,
+      descriptionAr: json['descriptionAr'] as String?,
+      descriptionEn: json['descriptionEn'] as String?,
+      type: json['type'] as String?,
+      target: json['target'] as num?,
+      auth: json['auth'] as String?,
+      notification: json['notification'] as bool?,
+      positiveDirection: json['positiveDirection'] as bool?, // Map the new field
+      kpiUnit: json['unit'] as String?,
+      source: json['source'] as String?,
+      periodicity: json['periodicity'] as String?, // Map the new field
+      relatedKpis: (json['relatedKpis'] as List<dynamic>?)
+          ?.map((e) => RelatedKpi.fromJson(e))
+          .toList(),
+      kpiData: json['kpiData'] != null
+          ? KpiData.fromJson(json['kpiData'])
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['nameEn'] = this.nameEn;
-    data['nameAr'] = this.nameAr;
-    data['type'] = this.type;
-    data['unit'] = this.unit;
-    data['periodicity'] = this.periodicity;
-    data['positiveDirection'] = this.positiveDirection;
-    if (this.relatedKpis != null) {
-     // data['relatedKpis'] = this.relatedKpis!.map((v) => v.toJson()).toList();
+    return {
+      'id': id,
+      'nameAr': nameAr,
+      'nameEn': nameEn,
+      'descriptionAr': descriptionAr,
+      'descriptionEn': descriptionEn,
+      'type': type,
+      'target': target,
+      'auth': auth,
+      'notification': notification,
+      'positiveDirection': positiveDirection, // Serialize the new field
+      'unit': kpiUnit,
+      'source': source,
+      'periodicity': periodicity, // Serialize the new field
+      'relatedKpis': relatedKpis?.map((e) => e.toJson()).toList(),
+      'kpiData': kpiData?.toJson(),
+    };
+  }
+
+  String getLocalizedName(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    return locale.languageCode == 'ar' ? (nameAr ?? '') : (nameEn ?? '');
+  }
+
+  String getLocalizedDescription(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    return locale.languageCode == 'ar'
+        ? (descriptionAr ?? '')
+        : (descriptionEn ?? '');
+  }
+
+}
+
+class RelatedKpi {
+  String? id;
+  String? nameAr;
+  String? nameEn;
+
+  RelatedKpi({
+    this.id,
+    this.nameAr,
+    this.nameEn,
+  });
+
+  String getLocalizedName(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    if (locale.languageCode == 'ar') {
+      return nameAr ?? '';
+    } else {
+      return nameEn ?? '';
     }
-    data['descriptionEn'] = this.descriptionEn;
-    data['descriptionAr'] = this.descriptionAr;
-    data['formula'] = this.formula;
-    return data;
+  }
+  factory RelatedKpi.fromJson(Map<String, dynamic> json) {
+    return RelatedKpi(
+      id: json['_id'] as String?,
+      nameAr: json['nameAr'] as String?,
+      nameEn: json['nameEn'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'nameAr': nameAr,
+      'nameEn': nameEn,
+    };
   }
 }

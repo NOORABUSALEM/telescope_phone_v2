@@ -1,19 +1,21 @@
-import 'package:telescope_phone_v2/data/models/kpiInfo.dart';
 
-import '../models/kpi_model.dart';
-import '../providers/kpi_provider.dart';
+import '../models/kpiInfo.dart';
 import '../providers/kpiinfo_providers.dart';
 
 class KpiInfoRepository {
-  final KpiInfoProvider provider;
+  final KpiInfoProvider Provider;
 
-  KpiInfoRepository({required this.provider});
+  KpiInfoRepository( this.Provider);
 
-  Future<List<KpiInfo>> getAllKpis() async {
-    try {
-      return await provider.fetchKpisInfo();
-    } catch (e) {
-      throw Exception('Repository Error: $e');
+  Future<List<KpiInfo>> fetch() async {
+    final apiData = await Provider.getKpiList() as List<KpiInfo>;
+
+      if (apiData != null && apiData.isNotEmpty) {
+        print('API Response: $apiData');
+        print('apiData runtime type: ${apiData.runtimeType}');
+        return apiData;
+      } else {
+        return [];
+      }
     }
-  }
 }
