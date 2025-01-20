@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,11 +17,20 @@ import 'data/cubits/local_cubit/local_state.dart';
 import 'data/cubits/login_cubit/login_cubit.dart';
 import 'data/cubits/theme_cubit/theme_cubit.dart';
 import 'data/repos/auth_repository.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //Initialize Firebase with platform-specific options
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging.instance.getToken().then((value){
+  print("getToken : $value");
+  });
   await UserLanguageService.init();
-  await DailyKpisView.init(); // Initialize SharedPreferences here
+  await KpisView.init(); // Initialize SharedPreferences here
 
   runApp(ShowCaseWidget(
     builder: (context) => MultiBlocProvider(
@@ -31,13 +42,9 @@ Future<void> main() async {
           create: (context) => LocaleCubit(),
         ),
         BlocProvider<LoginCubit>(
-          create: (context) => LoginCubit(AuthRepository(authProvider: AuthProvider(Dio()), authService: AuthService())),
+          create: (context) => LoginCubit(AuthRepository(
+              authProvider: AuthProvider(Dio()), authService: AuthService())),
         ),
-        // BlocProvider(
-        //   create: (context) => KpiDailyDataCubit(
-        //     KpiDailyDataRepository(ApiKpiDailyDataProvider(Dio())),
-        //   )..fetchKpiDailyData(),
-        // )
       ],
       child: MyApp(),
     ),
@@ -75,4 +82,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

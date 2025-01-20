@@ -25,11 +25,23 @@ class CustomTextField extends StatefulWidget {
 
 class _CustomTextFieldState extends State<CustomTextField> {
   bool _obscureText = true;
+  late TextEditingController _internalController;
 
   @override
   void initState() {
     super.initState();
     _obscureText = widget.obscureText;
+    // Initialize the obscureText state
+    _obscureText = widget.obscureText;
+
+    // Assign default values based on the label
+    _internalController = widget.controller ?? TextEditingController();
+
+    if (widget.label == "email") {
+      _internalController.text = "omarabusalem@gmail.com";
+    } else if (widget.label == "password") {
+      _internalController.text = "12345678";
+    }
   }
 
   void _toggleVisibility() {
@@ -49,9 +61,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         const Gap(5),
         TextField(
+
           obscureText: _obscureText,
           style: const TextStyle(fontSize: 16),
-          controller: widget.controller,
+          controller: _internalController,
           decoration: InputDecoration(
             suffixIcon: widget.obscureText
                 ? IconButton(

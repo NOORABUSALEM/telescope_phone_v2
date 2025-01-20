@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+
 import '../../../data/cubits/login_cubit/login_cubit.dart';
 import '../../../data/cubits/login_cubit/login_state.dart';
 import '../../components/customTextField.dart';
@@ -27,10 +28,10 @@ class LoginScreen extends StatelessWidget {
                 width: 230,
               ),
               const Gap(60),
-              CustomTextField(label: 'email', controller: emailController),
+              CustomTextField(label: "email", controller: emailController),
               const SizedBox(height: 10),
               CustomTextField(
-                label: 'password',
+                label: "password",
                 controller: passwordController,
                 obscureText: true,
               ),
@@ -54,6 +55,15 @@ class LoginScreen extends StatelessWidget {
                   return PrimaryButton(
                     label: "login",
                     onPressed: () {
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Email and password must not be empty')),
+                        );
+                        return;
+                      }
                       context.read<LoginCubit>().login(
                             emailController.text,
                             passwordController.text,

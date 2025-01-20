@@ -2,9 +2,9 @@ import 'dart:convert';
 
 class KpiData {
   final String id;
-  final List<ValueData> value;
+  final ValueData value; // Single ValueData object
   final List<double> compilationData;
-  final List<List<double>> dataList;
+  final List<DataList> dataList; // Updated to handle nested lists
 
   KpiData({
     required this.id,
@@ -17,13 +17,17 @@ class KpiData {
   factory KpiData.fromJson(Map<String, dynamic> json) {
     return KpiData(
       id: json['id'] as String,
-      value: (json['value'] as List<dynamic>)
-          .map((item) => ValueData.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      compilationData: List<double>.from(json['compilationData']),
-      dataList: (json['dataList'] as List<dynamic>)
-          .map((list) => List<double>.from(list as List<dynamic>))
-          .toList(),
+      value: json['value'] != null
+          ? ValueData.fromJson(json['value'] as Map<String, dynamic>)
+          : ValueData.defaultValue(),
+      compilationData: (json['compilationData'] as List<dynamic>?)
+          ?.map((item) => (item as num).toDouble())
+          .toList() ??
+          [],
+      dataList: (json['dataList'] as List<dynamic>?)
+          ?.map((item) => DataList.fromJson(item as Map<String, dynamic>))
+          .toList() ??
+          [],
     );
   }
 
@@ -31,34 +35,65 @@ class KpiData {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'value': value.map((item) => item.toJson()).toList(),
+      'value': value.toJson(),
       'compilationData': compilationData,
-      'dataList': dataList.map((list) => list.toList()).toList(),
+      'dataList': dataList.map((item) => item.toJson()).toList(),
     };
   }
 }
+
 class ValueData {
   final String date;
-  final int data;
+  final double data;
 
   ValueData({
     required this.date,
     required this.data,
   });
 
-  // Factory constructor for creating a new instance from a JSON map
   factory ValueData.fromJson(Map<String, dynamic> json) {
     return ValueData(
       date: json['date'] as String,
-      data: json['data'] as int,
+      data: (json['data'] as num).toDouble(),
     );
   }
 
-  // Method for converting an instance to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'date': date,
       'data': data,
+    };
+  }
+
+  factory ValueData.defaultValue() {
+    return ValueData(date: "1970-01-01", data: 0.0);
+  }
+}
+
+class DataList {
+  final List<String> dates;
+  final List<double> data;
+  final List<String?> events; // Add events list
+
+  DataList({
+    required this.dates,
+    required this.data,
+    required this.events,
+  });
+
+  factory DataList.fromJson(Map<String, dynamic> json) {
+    return DataList(
+      dates: (json['dates'] as List<dynamic>).map((item) => item as String).toList(),
+      data: (json['data'] as List<dynamic>).map((item) => (item as num).toDouble()).toList(),
+      events: (json['events'] as List<dynamic>).map((item) => item as String?).toList(), // Handle events
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'dates': dates,
+      'data': data,
+      'events': events, // Include events in JSON
     };
   }
 }

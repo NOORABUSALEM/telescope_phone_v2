@@ -24,7 +24,7 @@ class KpiInfoCubit extends Cubit<KpiInfoState> {
     try {
       try {
         final firstKpiInfo = result.first as KpiInfo;
-        final firstValueData = firstKpiInfo.kpiData?.value.first;
+        final firstValueData = firstKpiInfo.kpiData?.value;
         if (firstValueData != null) {
           final dateString = firstValueData.date;
           await service.saveDate(dateString); // Save the ISO 8601 date string
