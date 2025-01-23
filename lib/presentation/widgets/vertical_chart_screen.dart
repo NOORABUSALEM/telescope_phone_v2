@@ -1,7 +1,6 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-
 import '../../core/styles/color_constants.dart';
 
 class VerticalChartScreen extends StatefulWidget {
@@ -48,227 +47,229 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Vertical Dynamic Line Chart')),
       body: Center(
-        child: RotatedBox(
-          quarterTurns: 1,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16.0), // Add right padding
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Line Chart
-                SizedBox(
-                  height: 350,
-                  child: LineChart(
-                    LineChartData(
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: points,
-                          isCurved: true,
-                          preventCurveOverShooting: true,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? AppColors.secondary
-                              : AppColors.primary,
-                          dotData: FlDotData(
-                            show: true,
-                            getDotPainter: (spot, percent, barData, index) {
-                              return FlDotCirclePainter(
-                                radius: 4,
-                                color: widget.events[index] != null
-                                    ? Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? AppColors.primary
-                                        : AppColors.secondary
-                                    : AppColors.greyColor,
-                                strokeWidth: 0,
-                              );
-                            },
-                          ),
-                          belowBarData: BarAreaData(
-                            show: true,
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? [
-                                      AppColors.secondary.withOpacity(0.3),
-                                      AppColors.darkCardColor.withOpacity(0.3)
-                                    ]
-                                  : [
-                                      AppColors.primary.withOpacity(0.3),
-                                      AppColors.lightCardColor.withOpacity(0.3)
-                                    ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: RotatedBox(
+            quarterTurns: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0), // Add right padding
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Line Chart
+                  SizedBox(
+                    height: 500, // Increased height
+                    child: LineChart(
+                      LineChartData(
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: points,
+                            isCurved: true,
+                            preventCurveOverShooting: true,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.secondary
+                                : AppColors.primary,
+                            dotData: FlDotData(
+                              show: true,
+                              getDotPainter: (spot, percent, barData, index) {
+                                return FlDotCirclePainter(
+                                  radius: 4,
+                                  color: widget.events[index] != null
+                                      ? Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? AppColors.primary
+                                          : AppColors.secondary
+                                      : AppColors.greyColor,
+                                  strokeWidth: 0,
+                                );
+                              },
+                            ),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? [
+                                        AppColors.secondary.withOpacity(0.3),
+                                        AppColors.darkCardColor.withOpacity(0.3)
+                                      ]
+                                    : [
+                                        AppColors.primary.withOpacity(0.3),
+                                        AppColors.lightCardColor.withOpacity(0.3)
+                                      ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                      borderData: FlBorderData(
-                        border: const Border(
-                          bottom: BorderSide(),
-                          left: BorderSide(),
-                          right: BorderSide(width: 0),
-                        ),
-                      ),
-                      gridData: const FlGridData(show: false),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: _bottomTitles(widget.days),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: _leftTitles(widget.values, widget.unit),
-                        ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                      ),
-                      extraLinesData: ExtraLinesData(
-                        horizontalLines: [
-                          HorizontalLine(
-                            y: maxY,
-                            color: Colors.green,
-                            strokeWidth: 2,
-                            dashArray: [5, 5],
-                          ),
-                          HorizontalLine(
-                            y: minY,
-                            color: Colors.red,
-                            strokeWidth: 2,
-                            dashArray: [5, 5],
-                          ),
                         ],
-                      ),
-                      minY: 0,
-                      maxY: maxY,
-                      lineTouchData: LineTouchData(
-                        touchCallback: (FlTouchEvent event,
-                            LineTouchResponse? touchResponse) {
-                          if (touchResponse != null &&
-                              touchResponse.lineBarSpots != null) {
-                            final spot = touchResponse.lineBarSpots!.first;
-                            setState(() {
-                              _selectedEvent =
-                                  widget.events[spot.spotIndex] ?? 'No event';
-                              _selectedData = '${spot.y} ${widget.unit}';
-                              _selectedDay =
-                                  formatDate(widget.days[spot.spotIndex]);
-                            });
-                          }
-                        },
-                        touchTooltipData: LineTouchTooltipData(
-                          getTooltipColor: (LineBarSpot spot) =>
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? AppColors.secondary
-                                  : AppColors.primary,
-                          getTooltipItems: (touchedSpots) {
-                            return touchedSpots.map((spot) {
-                              final event = widget.events[spot.spotIndex];
-                              return LineTooltipItem(
-                                '${ formatDate(widget.days[spot.spotIndex])}\n${spot.y} ${widget.unit}',
-                                TextStyle(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? AppColors.lightTextColor
-                                      : AppColors.darkTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
-                            }).toList();
+                        borderData: FlBorderData(
+                          border: const Border(
+                            bottom: BorderSide(),
+                            left: BorderSide(),
+                            right: BorderSide(width: 0),
+                          ),
+                        ),
+                        gridData: const FlGridData(show: false),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: _bottomTitles(widget.days),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: _leftTitles(widget.values, widget.unit),
+                          ),
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        extraLinesData: ExtraLinesData(
+                          horizontalLines: [
+                            HorizontalLine(
+                              y: maxY,
+                              color: Colors.green,
+                              strokeWidth: 2,
+                              dashArray: [5, 5],
+                            ),
+                            HorizontalLine(
+                              y: minY,
+                              color: Colors.red,
+                              strokeWidth: 2,
+                              dashArray: [5, 5],
+                            ),
+                          ],
+                        ),
+                        minY: 0,
+                        maxY: maxY * 1.1, // Add margin at the top
+                        lineTouchData: LineTouchData(
+                          touchCallback: (FlTouchEvent event,
+                              LineTouchResponse? touchResponse) {
+                            if (touchResponse != null &&
+                                touchResponse.lineBarSpots != null) {
+                              final spot = touchResponse.lineBarSpots!.first;
+                              setState(() {
+                                _selectedEvent =
+                                    widget.events[spot.spotIndex] ?? 'No event';
+                                _selectedData = '${spot.y} ${widget.unit}';
+                                _selectedDay =
+                                    formatDate(widget.days[spot.spotIndex]);
+                              });
+                            }
                           },
+                          touchTooltipData: LineTouchTooltipData(
+                            getTooltipColor: (LineBarSpot spot) =>
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? AppColors.secondary
+                                    : AppColors.primary,
+                            getTooltipItems: (touchedSpots) {
+                              return touchedSpots.map((spot) {
+                                final event = widget.events[spot.spotIndex];
+                                return LineTooltipItem(
+                                  '${formatDate(widget.days[spot.spotIndex])}\n${spot.y} ${widget.unit}',
+                                  TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? AppColors.lightTextColor
+                                        : AppColors.darkTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              }).toList();
+                            },
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                // Min and Max Labels
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    // Reduce space
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    // Center align
-                    children: [
-                      // Min Label
-                      Text(
-                        "Min: $minY ${widget.unit}",
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                  // Min and Max Labels
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      // Reduce space
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // Center align
+                      children: [
+                        // Min Label
+                        Text(
+                          "Min: $minY ${widget.unit}",
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      // Add some space between labels
-                      // Max Label
-                      Text(
-                        "Max: $maxY ${widget.unit}",
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(width: 16),
+                        // Add some space between labels
+                        // Max Label
+                        Text(
+                          "Max: $maxY ${widget.unit}",
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                // Box under the chart
-                Container(
-                  padding: const EdgeInsets.all(20.0),
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 30.0),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.secondary
-                        : AppColors.primary,
-                    borderRadius: BorderRadius.circular(12.0),
-
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Day: $_selectedDay',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness ==
-                              Brightness.dark
-                              ? AppColors.lightTextColor
-                              : AppColors.darkTextColor,
+                  // Box under the chart
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 30.0),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.secondary
+                          : AppColors.primary,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Day: $_selectedDay',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? AppColors.lightTextColor
+                                : AppColors.darkTextColor,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        'Value: $_selectedData',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness ==
-                              Brightness.dark
-                              ? AppColors.lightTextColor
-                              : AppColors.darkTextColor,
+                        const SizedBox(height: 10.0),
+                        Text(
+                          'Value: $_selectedData',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? AppColors.lightTextColor
+                                : AppColors.darkTextColor,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        'Event: $_selectedEvent',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness ==
-                              Brightness.dark
-                              ? AppColors.lightTextColor
-                              : AppColors.darkTextColor,
+                        const SizedBox(height: 10.0),
+                        Text(
+                          'Event: $_selectedEvent',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? AppColors.lightTextColor
+                                : AppColors.darkTextColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

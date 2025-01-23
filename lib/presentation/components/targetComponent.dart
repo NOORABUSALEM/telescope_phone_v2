@@ -35,7 +35,7 @@ class TargetComponent extends StatelessWidget {
                 width: 150, // Increased width
                 height: 150, // Increased height
                 child: CircularProgressIndicator(
-                  value: percentageAchieved.clamp(0.0, 1.0),
+                  value: percentageAchieved/100,
                   strokeWidth: 10, // Thicker stroke
                   color: Theme.of(context).brightness == Brightness.dark
                     ? AppColors.secondary
@@ -43,7 +43,7 @@ class TargetComponent extends StatelessWidget {
                     ),
           ),
               Text(
-                "${(percentageAchieved).toInt()}%", // Show percentage
+                "${(percentageAchieved)}%", // Show percentage
                 style: const TextStyle(
                   fontSize: 28, // Larger font size for percentage
                   fontWeight: FontWeight.bold,

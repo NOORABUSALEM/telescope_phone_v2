@@ -169,7 +169,7 @@ class KpiTarget {
   String? quarter; // String for quarter (e.g., "Q1", "Q2")
   String? target; // String for target (e.g., "10.00", "15.00")
   String? achievedSum; // String for achievedSum (e.g., "0.00", "7198110.00")
-  int? percentageAchieved; // Integer for percentageAchieved (e.g., 0, 100)
+  double? percentageAchieved; // Integer for percentageAchieved (e.g., 0, 100)
 
   KpiTarget({
     this.quarter,
@@ -183,7 +183,7 @@ class KpiTarget {
       quarter: json['quarter'] as String?, // Assign directly as String
       target: json['target'] as String?, // Assign as String
       achievedSum: json['achievedSum'] as String?, // Assign as String
-      percentageAchieved: json['percentageAchieved'] as int?, // Assign as Integer
+        percentageAchieved: (json['percentageAchieved'] as num?)?.toDouble(),
     );
   }
 

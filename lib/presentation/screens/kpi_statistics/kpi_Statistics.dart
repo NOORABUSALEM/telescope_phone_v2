@@ -199,7 +199,7 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                       (index) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: TargetComponent(
-                      percentageAchieved:  kpiItem.target![index].percentageAchieved?.toDouble() ??0.0,
+                      percentageAchieved:  kpiItem.target![index].percentageAchieved ??0.0,
                       title: "You Have Achieved in the ${kpiItem.target![index].quarter}",
                       subtitle: "Of Your Target : ${kpiItem.target![index].target} ${kpiItem.kpiUnit}",
                     ),
