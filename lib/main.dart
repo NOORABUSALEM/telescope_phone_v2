@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,12 +23,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //Initialize Firebase with platform-specific options
-  await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-  );
-  FirebaseMessaging.instance.getToken().then((value){
-  print("getToken : $value");
-  });
+  // await Firebase.initializeApp(
+  // options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  // FirebaseMessaging.instance.getToken().then((value){
+  // print("getToken : $value");
+  // });
   await UserLanguageService.init();
   await KpisView.init(); // Initialize SharedPreferences here
 

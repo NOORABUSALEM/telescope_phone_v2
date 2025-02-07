@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:telescope_phone_v2/core/extensions/translation_extension/Translation_extension.dart';
+import 'package:telescope_phone_v2/core/styles/color_constants.dart';
 
 void showFilterDialog(BuildContext context, {required Function(String?, String?) onApply}) {
   String? selectedPositive;
@@ -40,11 +41,12 @@ void showFilterDialog(BuildContext context, {required Function(String?, String?)
         ),
         actions: [
           TextButton(
+
             onPressed: () {
               onApply(selectedPositive, selectedType);
               Navigator.pop(context);
             },
-            child: Text(context.trans("Apply")),
+            child: Text(context.trans("Apply"), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)),
           ),
         ],
       );

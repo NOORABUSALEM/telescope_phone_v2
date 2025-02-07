@@ -37,7 +37,9 @@ class LoginCubit extends Cubit<LoginState> {
       }
     } catch (e) {
       print('Login failed with error: $e');
-      emit(LoginFailure(e.toString()));
+      String errorMessage = e.toString().replaceAll('Exception:', '').trim();
+
+      emit(LoginFailure(errorMessage));
     }
   }
 

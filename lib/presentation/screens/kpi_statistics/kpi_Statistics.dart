@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:telescope_phone_v2/core/extensions/translation_extension/Translation_extension.dart';
 import 'package:telescope_phone_v2/data/models/kpiInfo.dart';
 import '../../../core/styles/color_constants.dart';
@@ -8,7 +9,6 @@ import '../../components/presenteg.dart';
 import '../../components/targetComponent.dart';
 import '../../routers/app_routes.dart';
 import '../../widgets/dynamicLineChart.dart';
-import 'package:share_plus/share_plus.dart';
 
 
 class KpiStatistics extends StatefulWidget {
