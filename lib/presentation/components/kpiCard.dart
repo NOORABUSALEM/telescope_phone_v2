@@ -13,7 +13,7 @@ class KpiCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<FlSpot> spots = _generateChartData(kpiItem.kpiData!.dataList[0]);
+    List<FlSpot> spots = _generateChartData(kpiItem.kpiData!.dataList[0].data);
 
     return GestureDetector(
       onTap: () {
@@ -50,7 +50,7 @@ class KpiCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      kpiItem.kpiData!.value.first.data.toString(),
+                     " ${kpiItem.kpiData!.value.data} ${kpiItem.kpiUnit}",
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,

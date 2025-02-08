@@ -43,6 +43,9 @@ dependencies:
   dio: ^5.7.0
   fl_chart: ^0.69.0
   showcaseview: ^3.0.0
+  share_plus: ^10.1.4
+  firebase_core: ^3.11.0
+  flutter_math_fork: ^0.7.3
 
 
 dev_dependencies:
@@ -74,6 +77,7 @@ flutter:
     - assets/images/Rectangle 30.png
     - assets/images/Asset11.png
     - assets/images/Asset12.png
+    - assets/images/logo2.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

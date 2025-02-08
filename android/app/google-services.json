@@ -7,26 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:76177554502:android:ab92da1e6575977c165e47",
-        "android_client_info": {
-          "package_name": "com.example.kpi_application"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDelUqavI-iK3wpCZ6s367ETJO8Km-K0mI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:76177554502:android:d38e6e08146fadb3165e47",
+        "mobilesdk_app_id": "1:76177554502:android:e84667f5e196a93f165e47",
         "android_client_info": {
           "package_name": "com.example.telescope_phone_v2"
         }

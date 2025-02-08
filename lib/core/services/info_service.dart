@@ -7,7 +7,6 @@ class InfoService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_dateTime, date); // Save the string as is
   }
-
   Future<String?> getDate() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_dateTime);

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:telescope_phone_v2/core/extensions/translation_extension/Translation_extension.dart';
 import 'package:telescope_phone_v2/data/models/kpiInfo.dart';
 import '../../../core/styles/color_constants.dart';
 import '../../components/customSwitcher.dart';
 import '../../components/presenteg.dart';
+import '../../components/targetComponent.dart';
 import '../../routers/app_routes.dart';
 import '../../widgets/dynamicLineChart.dart';
+
 
 class KpiStatistics extends StatefulWidget {
   const KpiStatistics({super.key});
@@ -25,7 +28,7 @@ class _KpiStatisticsState extends State<KpiStatistics> {
         ModalRoute.of(context)!.settings.arguments  as KpiInfo;
 
     List<String> switcherOptions = [];
-    if(kpiItem.type=='monthly') {
+    if(kpiItem.periodicity=='monthly') {
       switcherOptions = [
         (context).trans("Quarterly"),
         (context).trans("Yearly"),
@@ -42,15 +45,15 @@ class _KpiStatisticsState extends State<KpiStatistics> {
     switch (_currentSelection) {
       case 0:
         selectedChart =
-            DynamicLineChart(day:DateTime.parse(kpiItem.kpiData!.value[0].date) , values: kpiItem.kpiData!.dataList[0]);
+            DynamicLineChart(days:kpiItem.kpiData!.dataList[0].dates, values: kpiItem.kpiData!.dataList[0].data, unit: kpiItem.kpiUnit??"", events: kpiItem.kpiData!.dataList[0].events ,);
         break;
       case 1:
         selectedChart =
-            DynamicLineChart(day: DateTime.parse(kpiItem.kpiData!.value[0].date), values: kpiItem.kpiData!.dataList[1]);
+            DynamicLineChart(days:kpiItem.kpiData!.dataList[1].dates, values: kpiItem.kpiData!.dataList[1].data, unit: kpiItem.kpiUnit??"", events:kpiItem.kpiData!.dataList[1].events ,);
         break;
       default:
         selectedChart =
-            DynamicLineChart(day: DateTime.parse(kpiItem.kpiData!.value[0].date), values: kpiItem.kpiData!.dataList[2]);
+            DynamicLineChart(days:kpiItem.kpiData!.dataList[2].dates, values: kpiItem.kpiData!.dataList[2].data, unit: kpiItem.kpiUnit??"", events: kpiItem.kpiData!.dataList[2].events ,);
     }
 
     return Scaffold(
@@ -72,14 +75,96 @@ class _KpiStatisticsState extends State<KpiStatistics> {
               }),
           IconButton(
             icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.kpiSettings,
-                arguments: kpiItem,
+            onPressed: () async {
+              // Show a menu with two options
+              final result = await showMenu<int>(
+                context: context,
+                position: RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),  // Adjust position as needed
+                items: [
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: Row(
+                      children: const [
+                        Icon(Icons.settings),
+                        SizedBox(width: 8),
+                        Text('KPI Settings'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: Row(
+                      children: const [
+                        Icon(Icons.share),
+                        SizedBox(width: 8),
+                        Text('Share'),
+                      ],
+                    ),
+                  ),
+                ],
               );
+
+              // Perform action based on user selection
+              if (result == 0) {
+                // Navigate to KPI Settings page
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.kpiSettings,
+                  arguments: kpiItem,
+                );
+              } else if (result == 1) {
+                // Share the text content (e.g., KPI details)
+                String shareText = """
+                    ${kpiItem.nameEn}
+                  
+                    Day: ${kpiItem.kpiData?.value.date}
+                    Value: ${kpiItem.kpiData?.value.data}  ${kpiItem.kpiUnit}
+                  
+                    Difference from the last update: ${kpiItem.kpiData?.compilationData.first}%
+                  
+                   Achieved Target: ${kpiItem.target?.last.percentageAchieved}%
+                 
+                    Telescope: Your data in your space
+                    """;
+
+                try {
+                  // Share the content and check if sharing was successful
+                  await Share.share(shareText);
+
+                  // You can simulate a success message here
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text('Success'),
+                      content: Text('Content shared successfully!'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                } catch (e) {
+                  print("Error while sharing: $e");  // Print the actual error
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text('Error'),
+                      content: Text('Failed to share the content. Error: $e'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }
             },
           ),
+
         ],
       ),
       body: Center(
@@ -104,45 +189,27 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                 const Gap(20),
                 MetricsCard(),
                 const Gap(30),
-                Text(
-                  (context).trans("You Have Achieved"),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Gap(10),
-                Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: CircularProgressIndicator(
-                          value: (kpiItem.target?.toDouble()  )
-                              ?.clamp(0.0, 1.0),
-                          strokeWidth: 8,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? AppColors.secondary
-                              : AppColors.primary,
-                        ),
-                      ),
-                      Text(
-                        '${(( (kpiItem.target ?? 1)) * 100).toStringAsFixed(1)}%',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: List.generate(
+                  kpiItem.target!.length,
+                      (index) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: TargetComponent(
+                      percentageAchieved:  kpiItem.target![index].percentageAchieved ??0.0,
+                      title: "You Have Achieved in the ${kpiItem.target![index].quarter}",
+                      subtitle: "Of Your Target : ${kpiItem.target![index].target} ${kpiItem.kpiUnit}",
+                    ),
                   ),
                 ),
-                const Gap(20),
-                Text(
-                  (context).trans("Of Your Target"),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+              ),
+            ),
                 const Gap(40),
                 Divider(),
-                _buildRelatedKPIs(context,kpiItem)
+                //_buildRelatedKPIs(context,kpiItem)
               ],
             ),
           ),
@@ -220,15 +287,15 @@ class MetricsCard extends StatelessWidget {
         child: Column(
           children: [
             MetricRow(
-                label: (kpiItem.periodicity=='daily')?(context).trans("Last Day"):(context).trans("You Have Achieved"),
+                label: (kpiItem.periodicity=='daily')?(context).trans("Last Day"):(context).trans("Last Month"),
                 value: kpiItem.kpiData!.compilationData[0]),
             const _buildDivider(),
             MetricRow(
-                label: (kpiItem.periodicity=='daily')?(context).trans("Last Week"):(context).trans("You Have Achieved"),
+                label: (kpiItem.periodicity=='daily')?(context).trans("Last Week"):(context).trans("Quarter Average"),
                 value: kpiItem.kpiData!.compilationData[1]),
             const _buildDivider(),
             MetricRow(
-                label: (kpiItem.periodicity=='daily')?(context).trans("Month Average"):(context).trans("You Have Achieved"),
+                label: (kpiItem.periodicity=='daily')?(context).trans("Month Average"):(context).trans("Year Average"),
                 value: kpiItem.kpiData!.compilationData[2]),
           ],
         ),

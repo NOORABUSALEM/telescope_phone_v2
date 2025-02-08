@@ -11,6 +11,7 @@ import '../../../data/providers/kpiinfo_providers.dart';
 import '../../../data/repos/kpiInfo_repository.dart';
 import '../../components/customSearchBar.dart';
 import '../../components/drawer.dart';
+import '../../components/show_filter_component.dart';
 import 'kpi_tab.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MultiBlocProvider(
+    return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SearchBarCubit()),
         BlocProvider(
@@ -33,6 +34,8 @@ class HomeScreen extends StatelessWidget {
 }
 
 class HomeScreenView extends StatefulWidget {
+
+
   HomeScreenView({super.key});
 
   @override
@@ -40,6 +43,10 @@ class HomeScreenView extends StatefulWidget {
 }
 
 class _HomeScreenViewState extends State<HomeScreenView> {
+  // Filter state variables
+  String? positiveFilter; // e.g., "positive", "negative", "any"
+  String? typeFilter; // e.g., "numeric", "percentage", "money", "other"
+
   final GlobalKey _drawerKey = GlobalKey();
   String? date;
   final InfoService infoService = InfoService();
@@ -49,6 +56,16 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     super.initState();
     _checkShowCaseStatus();
     _loadDataService();
+  }
+  void _updateFilters(String? newPositive, String? newType) {
+    setState(() {
+      positiveFilter = newPositive;
+      typeFilter = newType;
+    });
+  }
+
+  void _openFilterDialog() {
+    showFilterDialog(context, onApply: _updateFilters);
   }
 
   Future<void> _checkShowCaseStatus() async {
@@ -76,6 +93,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -87,10 +105,14 @@ class _HomeScreenViewState extends State<HomeScreenView> {
             builder: (context, state) {
               return switch (state) {
                 SearchBarShow() => AppBar(
+                  leading: InkWell(
+                      onTap: _openFilterDialog,
+                        child: const Icon(Icons.filter_list_outlined)),
                     title: CustomSearchBar(
                       controller:
                           context.watch<SearchBarCubit>().searchController,
                     ),
+
                   ),
                 SearchBarHide() => AppBar(
                     leading: Showcase(
@@ -134,8 +156,8 @@ class _HomeScreenViewState extends State<HomeScreenView> {
             Expanded(
               child: TabBarView(
                 children: [
-                  DailyKpis(),
-                  DailyKpis(),
+                  KpisScreen(type: 'daily',selectedPositive:positiveFilter ,selectedType: typeFilter,),
+                  KpisScreen(type: 'monthly',selectedPositive:positiveFilter ,selectedType: typeFilter,),
                 ],
               ),
             ),
@@ -143,14 +165,14 @@ class _HomeScreenViewState extends State<HomeScreenView> {
         ),
         extendBody: true,
         bottomNavigationBar: BlocConsumer<KpiInfoCubit, KpiInfoState>(
-          listener: (context, state) {
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             return BottomAppBar(
               color: const Color(0xFFB2DAFF).withOpacity(0.4),
-              child: Center(child: Text(date != null
-            ? "${(context).trans("Last Updated:")} $date" // Display formatted date
-                : (context).trans("Fetching last updated date..."))),
+              child: Center(
+                  child: Text(date != null
+                      ? "${(context).trans("Last Updated:")} $date" // Display formatted date
+                      : (context).trans("Fetching last updated date..."))),
             );
           },
         ),
@@ -158,4 +180,3 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     );
   }
 }
-//${(context).trans("Last Update was :")}

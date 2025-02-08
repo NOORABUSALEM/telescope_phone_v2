@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('user_token');
-
+    Future.delayed(const Duration(seconds: 2), () {
     if (token != null) {
       // If token exists, navigate to the home screen
       Navigator.pushReplacementNamed(context, AppRoutes.home);
@@ -29,13 +29,14 @@ class _SplashScreenState extends State<SplashScreen> {
       // If no token, navigate to the login screen
       Navigator.pushReplacementNamed(context, AppRoutes.login);
     }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image(image: AssetImage('assets/images/Asset12.png')),
+        child: Image(image: AssetImage('assets/images/logo2.png')),
       ),
     );
   }

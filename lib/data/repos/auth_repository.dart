@@ -1,17 +1,18 @@
 
+import 'package:dio/dio.dart';
+
 import '../../core/services/auth_service.dart';
 import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
 
 class AuthRepository {
   final AuthProvider _authProvider;
-  final AuthService _authService;
 
   AuthRepository({
     required AuthProvider authProvider,
     required AuthService authService,
-  })  : _authProvider = authProvider,
-        _authService = authService;
+  })
+      : _authProvider = authProvider;
 
   // Login method
   Future<Map<String, dynamic>?> login(String email, String password) async {
@@ -22,25 +23,22 @@ class AuthRepository {
         final token = response.data['token'];
         final user = User.fromJson(response.data['user']);
 
-        // Save token locally
-        await _authService.saveToken(token);
-
         return {'user': user, 'token': token};
+      } else {
+        // Handle non-200 responses
+        final errorMessage = response.data?['message'] ?? 'Unknown error occurred';
+        throw Exception(errorMessage);
       }
-      return null;
+    } on DioError catch (dioError) {
+      // Handle Dio-specific errors
+      final errorMessage = dioError.response?.data?['message'] ??
+          dioError.message ??
+          'An error occurred';
+      throw Exception(errorMessage);
     } catch (e) {
-      rethrow;
+      // Handle other exceptions
+      throw Exception('An unexpected error occurred: $e');
     }
   }
 
-  // Logout method
-  Future<void> logout() async {
-    await _authService.clearToken();
-  }
-
-  // Check login status
-  Future<bool> isLoggedIn() async {
-    final token = await _authService.getToken();
-    return token != null;
-  }
 }

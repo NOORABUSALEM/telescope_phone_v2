@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import '../../../core/styles/color_constants.dart';
 import '../../../data/cubits/login_cubit/login_cubit.dart';
 import '../../../data/cubits/login_cubit/login_state.dart';
 import '../../components/customTextField.dart';
@@ -24,9 +25,25 @@ class LoginScreen extends StatelessWidget {
             children: <Widget>[
               Image.asset(
                 'assets/images/Asset11.png',
-                width: 230,
+                width: 300,
               ),
-              const Gap(60),
+              const SizedBox(
+                height: 16,
+              ),
+              RichText(
+                  text: const TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: 'Tele',
+                        style: TextStyle(
+                            fontSize: 36, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: 'Scope',
+                        style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.sideMenuIconsColor))
+                  ])),
+              const SizedBox(height: 16),
               CustomTextField(label: 'email', controller: emailController),
               const SizedBox(height: 10),
               CustomTextField(

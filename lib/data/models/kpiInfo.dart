@@ -1,5 +1,5 @@
+import 'dart:core';
 import 'package:flutter/cupertino.dart';
-
 import 'kpiData_model.dart';
 
 class KpiInfoListModel {
@@ -10,7 +10,8 @@ class KpiInfoListModel {
   factory KpiInfoListModel.fromJson(Map<String, dynamic> json) {
     // Safeguard for unexpected `data` format
     if (json['data'] is! List) {
-      throw FormatException('Unexpected data format: Expected a list but got ${json['data'].runtimeType}');
+      throw FormatException(
+          'Unexpected data format: Expected a list but got ${json['data'].runtimeType}');
     }
 
     return KpiInfoListModel(
@@ -26,6 +27,7 @@ class KpiInfoListModel {
     };
   }
 }
+
 class KpiInfo {
   String? id;
   String? nameAr;
@@ -33,13 +35,15 @@ class KpiInfo {
   String? descriptionAr;
   String? descriptionEn;
   String? type;
-  num? target;
+  List<KpiTarget>? target; // Updated to handle quarterly target data
   String? auth;
   bool? notification;
   bool? positiveDirection; // Updated field name
   String? kpiUnit;
-  String? source;
+  String? source; // Existing field for source
   String? periodicity; // New field
+  String? calculate; // New field for howToCalculate
+  String? formula; // New field for calculationFormat
   List<RelatedKpi>? relatedKpis;
   KpiData? kpiData;
 
@@ -56,7 +60,9 @@ class KpiInfo {
     this.positiveDirection,
     this.kpiUnit,
     this.source,
-    this.periodicity, // New field
+    this.periodicity,
+    this.calculate,
+    this.formula,
     this.relatedKpis,
     this.kpiData,
   });
@@ -69,19 +75,22 @@ class KpiInfo {
       descriptionAr: json['descriptionAr'] as String?,
       descriptionEn: json['descriptionEn'] as String?,
       type: json['type'] as String?,
-      target: json['target'] as num?,
+      target: (json['target'] as List<dynamic>?)
+          ?.map((e) => KpiTarget.fromJson(e))
+          .toList(), // Map the target list
       auth: json['auth'] as String?,
       notification: json['notification'] as bool?,
-      positiveDirection: json['positiveDirection'] as bool?, // Map the new field
+      positiveDirection: json['positiveDirection'] as bool?,
       kpiUnit: json['unit'] as String?,
       source: json['source'] as String?,
-      periodicity: json['periodicity'] as String?, // Map the new field
+      periodicity: json['periodicity'] as String?,
+      calculate: json['calculate'] as String?,
+      formula: json['formula'] as String?,
       relatedKpis: (json['relatedKpis'] as List<dynamic>?)
           ?.map((e) => RelatedKpi.fromJson(e))
           .toList(),
-      kpiData: json['kpiData'] != null
-          ? KpiData.fromJson(json['kpiData'])
-          : null,
+      kpiData:
+      json['kpiData'] != null ? KpiData.fromJson(json['kpiData']) : null,
     );
   }
 
@@ -93,18 +102,19 @@ class KpiInfo {
       'descriptionAr': descriptionAr,
       'descriptionEn': descriptionEn,
       'type': type,
-      'target': target,
+      'target': target?.map((e) => e.toJson()).toList(), // Serialize the target list
       'auth': auth,
       'notification': notification,
-      'positiveDirection': positiveDirection, // Serialize the new field
+      'positiveDirection': positiveDirection, // Serialize the field
       'unit': kpiUnit,
       'source': source,
-      'periodicity': periodicity, // Serialize the new field
+      'periodicity': periodicity,
+      'calculate': calculate,
+      'formula': formula,
       'relatedKpis': relatedKpis?.map((e) => e.toJson()).toList(),
       'kpiData': kpiData?.toJson(),
     };
   }
-
   String getLocalizedName(BuildContext context) {
     Locale locale = Localizations.localeOf(context);
     return locale.languageCode == 'ar' ? (nameAr ?? '') : (nameEn ?? '');
@@ -116,7 +126,6 @@ class KpiInfo {
         ? (descriptionAr ?? '')
         : (descriptionEn ?? '');
   }
-
 }
 
 class RelatedKpi {
@@ -138,6 +147,7 @@ class RelatedKpi {
       return nameEn ?? '';
     }
   }
+
   factory RelatedKpi.fromJson(Map<String, dynamic> json) {
     return RelatedKpi(
       id: json['_id'] as String?,
@@ -151,6 +161,38 @@ class RelatedKpi {
       '_id': id,
       'nameAr': nameAr,
       'nameEn': nameEn,
+    };
+  }
+}
+
+class KpiTarget {
+  String? quarter; // String for quarter (e.g., "Q1", "Q2")
+  String? target; // String for target (e.g., "10.00", "15.00")
+  String? achievedSum; // String for achievedSum (e.g., "0.00", "7198110.00")
+  double? percentageAchieved; // Integer for percentageAchieved (e.g., 0, 100)
+
+  KpiTarget({
+    this.quarter,
+    this.target,
+    this.achievedSum,
+    this.percentageAchieved,
+  });
+
+  factory KpiTarget.fromJson(Map<String, dynamic> json) {
+    return KpiTarget(
+      quarter: json['quarter'] as String?, // Assign directly as String
+      target: json['target'] as String?, // Assign as String
+      achievedSum: json['achievedSum'] as String?, // Assign as String
+        percentageAchieved: (json['percentageAchieved'] as num?)?.toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'quarter': quarter,
+      'target': target,
+      'achievedSum': achievedSum,
+      'percentageAchieved': percentageAchieved,
     };
   }
 }
