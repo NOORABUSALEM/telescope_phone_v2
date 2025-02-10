@@ -5,6 +5,7 @@ class ApiConstants {
   static const String kpis = '$baseUrl/kpis';
 
   static const String loginEndpoint = '$users/mobileApp/login';
+  static const String logoutEndpoint = '$users/mobileApp/logout';
   static const String getAllkpisEndpoint = '$kpis/mobileApp/getAllaccessibleKpi';
 
 // static const kpiInfo = "$baseUrl/kpi/info";

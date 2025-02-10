@@ -48,6 +48,8 @@ class LoginCubit extends Cubit<LoginState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await _authService.clearToken();
     await prefs.clear();
+    int min = 5 ;
+    _authRepository.logout(min);
   }
 }
 

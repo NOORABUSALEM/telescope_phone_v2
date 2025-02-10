@@ -62,6 +62,14 @@
   "Positive": "Positive",
   "Direction": "Direction",
   "No KPI data available.": "No KPI data available.",
-  "Fetching last updated date...": "Fetching last updated date..."
+  "Fetching last updated date...": "Fetching last updated date...",
+  "Change Password": "Change Password",
+  "Previous Password": "Previous Password",
+  "New Password": "New Password",
+  "Confirm New Password": "Confirm New Password",
+  "Success! Password changed. please login again." : "Success! Password changed. please login again.",
+  "Passwords do not match." : "Passwords do not match.",
+
+  "OK": "OK"
 }
 

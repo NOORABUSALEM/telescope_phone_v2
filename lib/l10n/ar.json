@@ -62,5 +62,12 @@
   "Apply": "تطبيق",
   "Positive": "اجابي",
   "No KPI data available.": "لا توجد بيانات مؤشرات متاحة.",
-  "Fetching last updated date...": "جاري جلب تاريخ آخر تحديث..."
+  "Fetching last updated date...": "جاري جلب تاريخ آخر تحديث...",
+  "Change Password": "تغيير كلمة المرور",
+  "Previous Password": "كلمة المرور السابقة",
+  "New Password": "كلمة المرور الجديدة",
+  "Confirm New Password": "تأكيد كلمة المرور الجديدة",
+  "Success! Password changed. please login again." : "تم تغيير كلمة المرور بنجاح. يرجى تسجيل الدخول مرة أخرى.",
+  "Passwords do not match." : "كلمات المرور غير متطابقة",
+    "OK": "حسنا"
 }

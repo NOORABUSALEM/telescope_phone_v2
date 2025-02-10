@@ -41,4 +41,12 @@ class AuthRepository {
     }
   }
 
+  // Logout method
+  Future<void> logout(int minutes) async {
+    try {
+      await _authProvider.logout(minutes);
+    } catch (e) {
+      throw Exception('Logout failed: $e');
+    }
+  }
 }

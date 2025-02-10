@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/constants.dart';
 
@@ -16,9 +19,24 @@ class AuthProvider {
     return await _dio.post(ApiConstants.loginEndpoint, data: data);
   }
 
-  // // Logout API call (optional)
-  // Future<Response> logout() async {
-  //   return await _dio.post(ApiConstants.logoutEndpoint);
-  // }
 
+  Future<void> logout(int minutes) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('user_token');
+    final response = await _dio.post(
+      ApiConstants.logoutEndpoint,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+      data: jsonEncode({"duration": minutes}),
+
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Logout failed');
+    }
+  }
 }
+
