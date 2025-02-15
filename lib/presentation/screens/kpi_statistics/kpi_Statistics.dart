@@ -45,15 +45,15 @@ class _KpiStatisticsState extends State<KpiStatistics> {
     switch (_currentSelection) {
       case 0:
         selectedChart =
-            DynamicLineChart(days:kpiItem.kpiData!.dataList[0].dates, values: kpiItem.kpiData!.dataList[0].data, unit: kpiItem.kpiUnit??"", events: kpiItem.kpiData!.dataList[0].events ,);
+            DynamicLineChart(days:kpiItem.kpiData!.dataList[0].dates, values: kpiItem.kpiData!.dataList[0].data,  events: kpiItem.kpiData!.dataList[0].events, kpiitem: kpiItem ,);
         break;
       case 1:
         selectedChart =
-            DynamicLineChart(days:kpiItem.kpiData!.dataList[1].dates, values: kpiItem.kpiData!.dataList[1].data, unit: kpiItem.kpiUnit??"", events:kpiItem.kpiData!.dataList[1].events ,);
+            DynamicLineChart(days:kpiItem.kpiData!.dataList[1].dates, values: kpiItem.kpiData!.dataList[1].data,events:kpiItem.kpiData!.dataList[1].events , kpiitem: kpiItem ,);
         break;
       default:
         selectedChart =
-            DynamicLineChart(days:kpiItem.kpiData!.dataList[2].dates, values: kpiItem.kpiData!.dataList[2].data, unit: kpiItem.kpiUnit??"", events: kpiItem.kpiData!.dataList[2].events ,);
+            DynamicLineChart(days:kpiItem.kpiData!.dataList[2].dates, values: kpiItem.kpiData!.dataList[2].data,events: kpiItem.kpiData!.dataList[2].events , kpiitem: kpiItem ,);
     }
 
     return Scaffold(
@@ -200,8 +200,8 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: TargetComponent(
                       percentageAchieved:  kpiItem.target![index].percentageAchieved ??0.0,
-                      title: "You Have Achieved in the ${kpiItem.target![index].quarter}",
-                      subtitle: "Of Your Target : ${kpiItem.target![index].target} ${kpiItem.kpiUnit}",
+                      title: " ${(context).trans("You Have Achieved in the")} :${kpiItem.target![index].quarter}",
+                      subtitle: " ${(context).trans("Of The Target")} : ${kpiItem.target![index].target} ${kpiItem.kpiUnit}",
                     ),
                   ),
                 ),
@@ -239,12 +239,14 @@ class _buildDivider extends StatelessWidget {
 class MetricRow extends StatelessWidget {
   final String label;
   final double value;
+  final bool isPositive;
 
 
   const MetricRow(
       {super.key,
       required this.label,
       required this.value,
+      required this.isPositive
      });
 
   @override
@@ -256,7 +258,7 @@ class MetricRow extends StatelessWidget {
           label,
           style: const TextStyle(fontSize: 16),
         ),
-        PercentageWidget(percentage: value,
+        PercentageWidget(percentage: value,isPositive: isPositive,
 
         )
       ],
@@ -287,16 +289,18 @@ class MetricsCard extends StatelessWidget {
         child: Column(
           children: [
             MetricRow(
+
                 label: (kpiItem.periodicity=='daily')?(context).trans("Last Day"):(context).trans("Last Month"),
-                value: kpiItem.kpiData!.compilationData[0]),
+                value: kpiItem.kpiData!.compilationData[0], isPositive: kpiItem.positiveDirection??true,),
+
             const _buildDivider(),
             MetricRow(
                 label: (kpiItem.periodicity=='daily')?(context).trans("Last Week"):(context).trans("Quarter Average"),
-                value: kpiItem.kpiData!.compilationData[1]),
+                value: kpiItem.kpiData!.compilationData[1], isPositive: kpiItem.positiveDirection??true,),
             const _buildDivider(),
             MetricRow(
                 label: (kpiItem.periodicity=='daily')?(context).trans("Month Average"):(context).trans("Year Average"),
-                value: kpiItem.kpiData!.compilationData[2]),
+                value: kpiItem.kpiData!.compilationData[2], isPositive: kpiItem.positiveDirection??true,),
           ],
         ),
       ),

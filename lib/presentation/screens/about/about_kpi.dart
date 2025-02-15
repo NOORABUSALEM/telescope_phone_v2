@@ -41,8 +41,10 @@ class AboutKpi extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              kpiItem.source ?? (context).trans("Unknown"),
-              style: const TextStyle(fontSize: 16),
+              kpiItem.source ?? (context).trans("Billing systems, financial reports, customer accounts."),
+              style: const TextStyle(
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 30),
 
@@ -53,22 +55,27 @@ class AboutKpi extends StatelessWidget {
             const SizedBox(height: 15),
             Text(
               kpiItem.calculate ?? (context).trans("Unknown"),
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 30),
 
             // Formula Section
-            const Text(
-              "Formula:",
+             Text(
+              '${(context).trans("The Formula")} :',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Math.tex(
-              kpiItem.formula ?? r"\text{Unknown}",
-              // If the formula is null, show "Unknown"
-              textStyle: const TextStyle(
-                  fontSize:
-                      16), // Apply TextStyle directly using the `textStyle` parameter
+            Center(
+              child: Math.tex(
+                kpiItem.formula ?? r"\text{Unknown}",
+                // If the formula is null, show "Unknown"
+                textStyle: const TextStyle(
+
+                    fontSize:
+                        18), // Apply TextStyle directly using the `textStyle` parameter
+              ),
             )
           ],
         ),

@@ -41,7 +41,7 @@ dependencies:
   shared_preferences: ^2.3.2
   gap: ^3.0.1
   dio: ^5.7.0
-  fl_chart: ^0.70.2
+  fl_chart: 0.66.1
   showcaseview: ^3.0.0
   share_plus: ^10.1.4
   firebase_core: ^3.11.0

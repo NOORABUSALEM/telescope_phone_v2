@@ -31,12 +31,16 @@ class LoginScreen extends StatelessWidget {
                 height: 16,
               ),
               RichText(
-                  text: const TextSpan(children: <TextSpan>[
+                  text:  TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: 'Tele',
                         style: TextStyle(
-                            fontSize: 36, fontWeight: FontWeight.bold)),
-                    TextSpan(
+                            fontSize: 36, fontWeight: FontWeight.bold ,color: Theme
+                            .of(context)
+                            .brightness == Brightness.dark
+                            ? AppColors.darkTextColor
+                            : AppColors.lightTextColor,)),
+                    const TextSpan(
                         text: 'Scope',
                         style: TextStyle(
                             fontSize: 36,

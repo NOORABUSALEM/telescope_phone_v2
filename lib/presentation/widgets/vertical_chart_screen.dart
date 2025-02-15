@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:telescope_phone_v2/core/extensions/translation_extension/Translation_extension.dart';
+import 'package:telescope_phone_v2/data/models/kpiInfo.dart';
 import '../../core/styles/color_constants.dart';
 
 class VerticalChartScreen extends StatefulWidget {
   final List<String> days;
   final List<String?> events;
   final List<double> values;
-  final String unit;
+  final KpiInfo kpiItem;
+
 
   const VerticalChartScreen({
     super.key,
     required this.days,
     required this.values,
-    required this.unit,
     required this.events,
+    required this.kpiItem,
+
   });
 
   @override
@@ -22,7 +26,7 @@ class VerticalChartScreen extends StatefulWidget {
 }
 
 class _VerticalChartScreenState extends State<VerticalChartScreen> {
-  String _selectedEvent = 'No event';
+  String _selectedEvent = '';
   String _selectedData = '';
   String _selectedDay = '';
 
@@ -45,7 +49,10 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
     final minY = widget.values.reduce((a, b) => a < b ? a : b);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Vertical Dynamic Line Chart')),
+      appBar: AppBar(title:  Text(
+      "${ (context).trans("the events of the")} ${widget.kpiItem.getLocalizedName(context)}",
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),),
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -116,7 +123,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                             sideTitles: _bottomTitles(widget.days),
                           ),
                           leftTitles: AxisTitles(
-                            sideTitles: _leftTitles(widget.values, widget.unit),
+                            sideTitles: _leftTitles(widget.values, widget.kpiItem.kpiUnit!),
                           ),
                           topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
@@ -151,15 +158,15 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                               final spot = touchResponse.lineBarSpots!.first;
                               setState(() {
                                 _selectedEvent =
-                                    widget.events[spot.spotIndex] ?? 'No event';
-                                _selectedData = '${spot.y} ${widget.unit}';
+                                    widget.events[spot.spotIndex] ?? (context).trans("No event");
+                                _selectedData = '${spot.y} ${widget.kpiItem.kpiUnit}';
                                 _selectedDay =
                                     formatDate(widget.days[spot.spotIndex]);
                               });
                             }
                           },
                           touchTooltipData: LineTouchTooltipData(
-                            getTooltipColor: (LineBarSpot spot) =>
+                            tooltipBgColor:
                                 Theme.of(context).brightness == Brightness.dark
                                     ? AppColors.secondary
                                     : AppColors.primary,
@@ -167,7 +174,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                               return touchedSpots.map((spot) {
                                 final event = widget.events[spot.spotIndex];
                                 return LineTooltipItem(
-                                  '${formatDate(widget.days[spot.spotIndex])}\n${spot.y} ${widget.unit}',
+                                  '${formatDate(widget.days[spot.spotIndex])}\n${spot.y} ${widget.kpiItem.kpiUnit}',
                                   TextStyle(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -194,7 +201,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                       children: [
                         // Min Label
                         Text(
-                          "Min: $minY ${widget.unit}",
+                          "${(context).trans("Min")}: $minY ${widget.kpiItem.kpiUnit}",
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 14,
@@ -205,7 +212,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                         // Add some space between labels
                         // Max Label
                         Text(
-                          "Max: $maxY ${widget.unit}",
+                          "${(context).trans("Max")}: $maxY ${widget.kpiItem.kpiUnit}",
                           style: const TextStyle(
                             color: Colors.green,
                             fontSize: 14,
@@ -231,7 +238,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Day: $_selectedDay',
+                          '${(context).trans("The Day")}: $_selectedDay',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -243,7 +250,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          'Value: $_selectedData',
+                          '${(context).trans("The Value")}: $_selectedData ${widget.kpiItem.kpiUnit}',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -255,7 +262,7 @@ class _VerticalChartScreenState extends State<VerticalChartScreen> {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          'Event: $_selectedEvent',
+                          '${(context).trans("The Event")}: $_selectedEvent',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

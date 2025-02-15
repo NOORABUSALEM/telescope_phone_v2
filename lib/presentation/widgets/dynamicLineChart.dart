@@ -3,18 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:telescope_phone_v2/presentation/widgets/vertical_chart_screen.dart';
 import '../../core/styles/color_constants.dart';
+import '../../data/models/kpiInfo.dart';
 
 class DynamicLineChart extends StatelessWidget {
   final List<String> days; // List of string days
   final List<double> values;
   final List<String?> events;
-  final String unit;
+  final KpiInfo kpiitem;
+
 
   const DynamicLineChart({
     super.key,
     required this.days, // Use a provided list of days
     required this.values,
-    required this.unit, required this.events,
+    required this.events,
+    required this.kpiitem,
+
   });
   String formatDate(String date) {
     DateTime parsedDate = DateTime.parse(date);
@@ -58,8 +62,9 @@ class DynamicLineChart extends StatelessWidget {
           builder: (context) => VerticalChartScreen(
             days: days,
             values: values,
-            unit: unit,
             events: events,
+            kpiItem: kpiitem,
+
           ),
         ),
       );
@@ -124,7 +129,7 @@ class DynamicLineChart extends StatelessWidget {
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
-              getTooltipColor: (LineBarSpot spot) =>
+              tooltipBgColor:
               Theme
                   .of(context)
                   .brightness == Brightness.dark
@@ -138,7 +143,7 @@ class DynamicLineChart extends StatelessWidget {
               getTooltipItems: (touchedSpots) =>
                   touchedSpots.map((spot) {
                     return LineTooltipItem(
-                      '${ formatDate(days[spot.spotIndex])}\n${spot.y} ${unit}',
+                      '${ formatDate(days[spot.spotIndex])}\n${spot.y} ${kpiitem.kpiUnit}',
                       TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -211,7 +216,7 @@ class DynamicLineChart extends StatelessWidget {
         // Show titles only at interval steps starting from 0
         if (value % interval == 0 && value <= maxY) {
           return Text(
-            "${value.toStringAsFixed(1)}  $unit", // Format value to 1 decimal place
+            "${value.toStringAsFixed(1)}  ${kpiitem.kpiUnit}", // Format value to 1 decimal place
             style: const TextStyle(fontSize: 12),
           );
         }

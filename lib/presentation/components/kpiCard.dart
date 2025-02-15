@@ -56,7 +56,7 @@ class KpiCard extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    PercentageWidget(percentage: kpiItem.kpiData!.compilationData[0],
+                    PercentageWidget(percentage: kpiItem.kpiData!.compilationData[0], isPositive: kpiItem.positiveDirection??true
                     )
                   ],
                 ),

@@ -68,6 +68,18 @@
   "New Password": "كلمة المرور الجديدة",
   "Confirm New Password": "تأكيد كلمة المرور الجديدة",
   "Success! Password changed. please login again." : "تم تغيير كلمة المرور بنجاح. يرجى تسجيل الدخول مرة أخرى.",
+  "You Have Achieved in the": "لقد حققت في ",
   "Passwords do not match." : "كلمات المرور غير متطابقة",
-    "OK": "حسنا"
+  "the events of the": "أحداث مؤشر ",
+  "No event": "لا يوجد حدث",
+  "master": "رئيسي",
+  "The Day": "اليوم",
+  "The Value": "القيمة",
+  "The Event": "الحدث",
+  "The Formula": "الصيغة",
+  "Billing systems, financial reports, customer accounts.": "أنظمة الفوترة، التقارير المالية، حسابات العملاء.",
+  "Of The Target": "من الهدف",
+  "Min": "القيمة الصغرى",
+  "Max": "القيمة الكبرى",
+  "OK": "حسنا"
 }

@@ -45,9 +45,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _internalController = widget.controller ?? TextEditingController();
 
     if (widget.label == "email") {
-      _internalController.text = "omarabusalem@gmail.com";
+      _internalController.text = "";
     } else if (widget.label == "password") {
-      _internalController.text = "12345678";
+      _internalController.text = "";
     }
   }
 

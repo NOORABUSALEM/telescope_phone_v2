@@ -69,7 +69,18 @@
   "Confirm New Password": "Confirm New Password",
   "Success! Password changed. please login again." : "Success! Password changed. please login again.",
   "Passwords do not match." : "Passwords do not match.",
-
+  "You Have Achieved in the": "You Have Achieved in the",
+  "the events of the": "the events of the",
+  "No event": "No event",
+  "The Day": "The Day",
+  "The Value": "The Value",
+  "The Event": "The Event",
+  "The Formula": "The Formula",
+  "Billing systems, financial reports, customer accounts.": "Billing systems, financial reports, customer accounts.",
+  "Of The Target": "Of The Target",
+  "master": "master",
+  "Min" : "Min",
+  "Max" : "Max",
   "OK": "OK"
 }
 

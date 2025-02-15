@@ -12,6 +12,7 @@ import 'package:telescope_phone_v2/presentation/screens/all_KPIs/all_kpis.dart';
 import '../../core/services/info_service.dart';
 import '../../core/styles/color_constants.dart';
 import '../../data/cubits/login_cubit/login_cubit.dart';
+import '../widgets/Timer_widget.dart';
 import 'languageSelector.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -52,7 +53,7 @@ class _AppDrawerState extends State<AppDrawer> {
     setState(() {
       userName = name ?? 'Guest';
       userEmail = email ?? 'Guest';
-      userRole = role ?? 'Guest';
+      userRole = role ?? 'master';
     });
   }
 
@@ -101,7 +102,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   fontSize: 20, fontWeight: FontWeight.w600),
                             ),
                             const Expanded(child: SizedBox()),
-                            if (userRole == "employee")
+                            if (userRole == "admin")
                               Container(
                                 decoration: BoxDecoration(
                                   color:
@@ -112,7 +113,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 5),
                                   child: Text(
-                                    (context).trans("employee"),
+                                    (context).trans("admin"),
                                     style: const TextStyle(
                                         color: AppColors.yellowColor,
                                         fontSize: 14,
@@ -120,18 +121,37 @@ class _AppDrawerState extends State<AppDrawer> {
                                   ),
                                 ),
                               ),
-                            if (userRole == "manager")
+                            if (userRole == "master")
                               Container(
                                 decoration: BoxDecoration(
                                   color:
-                                      const Color(0xFF24A959).withOpacity(0.2),
+                                       Colors.deepPurple.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(7),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 5),
                                   child: Text(
-                                    (context).trans("manager"),
+                                    (context).trans("master"),
+                                    style: const TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                            if (userRole == "employee")
+                              Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                  const Color(0xFF24A959).withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: Text(
+                                    (context).trans("employee"),
                                     style: const TextStyle(
                                         color: AppColors.upArrowColor,
                                         fontSize: 14,
@@ -176,6 +196,13 @@ class _AppDrawerState extends State<AppDrawer> {
                     _showChangePasswordDialog(context);
                   },
                 ),
+                 Container(
+                   margin: const EdgeInsets.symmetric(horizontal: 16),
+                   child: ListTile(
+                     title: TimerWidget(),
+                   ),
+                 ),
+
               ],
             ),
           ),
