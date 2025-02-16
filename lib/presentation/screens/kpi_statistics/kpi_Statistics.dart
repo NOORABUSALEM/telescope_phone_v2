@@ -179,7 +179,7 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                 final response = await dio.post(
                   'https://funny-deer-learn.loca.lt/predict',
                   data: {
-                    'input': 'Malek say hello from the API',
+                    'input': kpiItem.kpiData!.dataList[0].data,
                   },
                 );
 
