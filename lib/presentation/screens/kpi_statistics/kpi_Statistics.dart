@@ -9,6 +9,7 @@ import '../../components/presenteg.dart';
 import '../../components/targetComponent.dart';
 import '../../routers/app_routes.dart';
 import '../../widgets/dynamicLineChart.dart';
+import 'package:dio/dio.dart';
 
 
 class KpiStatistics extends StatefulWidget {
@@ -63,20 +64,21 @@ class _KpiStatisticsState extends State<KpiStatistics> {
         automaticallyImplyLeading: true,
         actions: [
           IconButton(
-              icon: const Icon(
-                Icons.info_outline,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.aboutKpi,
-                  arguments: kpiItem,
-                );
-              }),
+            icon: const Icon(
+              Icons.info_outline,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.aboutKpi,
+                arguments: kpiItem,
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () async {
-              // Show a menu with two options
+              // Show a menu with three options
               final result = await showMenu<int>(
                 context: context,
                 position: RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),  // Adjust position as needed
@@ -101,6 +103,16 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                       ],
                     ),
                   ),
+                  PopupMenuItem<int>(
+                    value: 2,
+                    child: Row(
+                      children: const [
+                        Icon(Icons.smart_toy), // AI icon
+                        SizedBox(width: 8),
+                        Text('Future Prediction'),
+                      ],
+                    ),
+                  ),
                 ],
               );
 
@@ -116,14 +128,14 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                 // Share the text content (e.g., KPI details)
                 String shareText = """
                     ${kpiItem.nameEn}
-                  
+        
                     Day: ${kpiItem.kpiData?.value.date}
                     Value: ${kpiItem.kpiData?.value.data}  ${kpiItem.kpiUnit}
-                  
+        
                     Difference from the last update: ${kpiItem.kpiData?.compilationData.first}%
-                  
+        
                    Achieved Target: ${kpiItem.target?.last.percentageAchieved}%
-                 
+        
                     Telescope: Your data in your space
                     """;
 
@@ -161,10 +173,33 @@ class _KpiStatisticsState extends State<KpiStatistics> {
                     ),
                   );
                 }
+              } else if (result == 2) {
+                // Send POST request with Dio
+                final dio = Dio();
+                final response = await dio.post(
+                  'https://funny-deer-learn.loca.lt/predict',
+                  data: {
+                    'input': 'Malek say hello from the API',
+                  },
+                );
+
+                // Handle the response
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('AI Response'),
+                    content: Text('Response: ${response.data}'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
               }
             },
           ),
-
         ],
       ),
       body: Center(
