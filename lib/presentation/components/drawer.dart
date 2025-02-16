@@ -196,12 +196,12 @@ class _AppDrawerState extends State<AppDrawer> {
                     _showChangePasswordDialog(context);
                   },
                 ),
-                 Container(
-                   margin: const EdgeInsets.symmetric(horizontal: 16),
-                   child: ListTile(
-                     title: TimerWidget(),
-                   ),
-                 ),
+                 // Container(
+                 //   margin: const EdgeInsets.symmetric(horizontal: 16),
+                 //   child: ListTile(
+                 //     title: TimerWidget(),
+                 //   ),
+                 // ),
 
               ],
             ),
